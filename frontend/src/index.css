@@ -1,0 +1,32 @@
+body{
+    background-image: url(./bg-chat.png);
+}
+.register{
+    width: 600px;
+    border: 1px solid whitesmoke;
+}
+.form-group{
+    height: 450px;
+}
+#login{
+    width: 600px;
+    border: 1px solid white;
+}
+#formgroup{
+    height: 250px;
+}
+.sidebar{
+    width: 400px;
+    border-right: 1px solid black;
+}
+
+@media screen and (max-width:500px) {
+    /* form{
+        width: 400px;
+        height: 600px;
+    } */
+    #login{
+        width: 400px;
+    }
+
+}
