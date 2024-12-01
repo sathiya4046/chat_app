@@ -17,6 +17,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
+git rm --cached .env
 git rm .env.local --cached
 git rm .env.staging --cached
 git commit -m "Stopped tracking env.local, and env.staging"
