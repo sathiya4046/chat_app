@@ -1,12 +1,3 @@
-// const cors = require('cors')
-// const mongoose = require('mongoose')
-// const bcrypt = require('bcrypt')
-// const jwt = require('jsonwebtoken')
-// const bodyParser = require('body-parser')
-// const cookieParser = require('cookie-parser') 
-// const User = require('./models/user.js')
-// const express = require('express')
-
 import cors from 'cors'
 import mongoose from 'mongoose'
 import bcrypt from "bcrypt"
@@ -16,6 +7,7 @@ import cookieParser from 'cookie-parser'
 import express from 'express'
 import multer from 'multer'
 import path from 'path'
+import dotenv from 'dotenv'
 
 //socket 
 import { Server } from 'socket.io'
@@ -27,13 +19,15 @@ const port = 4000
 
 const app = express()
 
+dotenv.config()
+
 const server = http.createServer(app)
 
 const onlineUsers = {}
 
 app.use(express.json())
 app.use(cors({
-    origin:"http://localhost:3000",
+    origin:"*",
     methods:["GET","POST"],
     credentials:true
 }))
@@ -43,7 +37,7 @@ app.use(express.static('public'))
 
 //--------db connection -------------
 
-mongoose.connect('mongodb://localhost:27017/chatapp')
+mongoose.connect(process.env.DATABASE)
 .then(() => console.log('Connected!'));
 
 //------------image---------------
@@ -293,3 +287,4 @@ app.post('/messages/:id', verifyUser, async (req,res)=>{
 server.listen(port, ()=>{
     console.log(`Running on port ${port}`)
 })
+
