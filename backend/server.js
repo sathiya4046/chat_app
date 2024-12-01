@@ -27,7 +27,7 @@ const onlineUsers = {}
 
 app.use(express.json())
 app.use(cors({
-    origin:"https://chat-app-9v5o.vercel.app",
+    origin:"*",
     methods:["GET","POST"],
     credentials:true
 }))
