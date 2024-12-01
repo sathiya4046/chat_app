@@ -23,7 +23,7 @@ const Chatapp = ({socket}) => {
 
   useEffect(()=>{
     const verifyUser = async ()=>{
-      const response = await axios.get("http://localhost:4000/chatapp",{
+      const response = await axios.get("https://chat-app-8h8v.onrender.com/chatapp",{
         headers:{
           "Authorization":`${window.localStorage.getItem('token')}`
         }

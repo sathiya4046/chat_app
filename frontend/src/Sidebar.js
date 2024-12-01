@@ -12,7 +12,7 @@ const Sidebar = ({handleLogout,setStartchat,setChats,setreceiverId,setTitle}) =>
 
     useEffect(()=>{
         const fetchData = async () =>{
-            const response = await axios.get(`http://localhost:4000/users/`,{
+            const response = await axios.get(`https://chat-app-8h8v.onrender.com/users/`,{
                 headers:{
                   "Authorization":`${window.localStorage.getItem('token')}`
                 }
@@ -25,7 +25,7 @@ const Sidebar = ({handleLogout,setStartchat,setChats,setreceiverId,setTitle}) =>
     const startChat = async (id) =>{
 
         try{
-            const response = await axios.get(`http://localhost:4000/readMessage/${id}`,{
+            const response = await axios.get(`https://chat-app-8h8v.onrender.com/readMessage/${id}`,{
                 headers:{
                   "Authorization":`${window.localStorage.getItem('token')}`
                 }

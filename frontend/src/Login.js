@@ -15,7 +15,7 @@ const Login = ({setToken}) => {
   const handleLogin = async (e)=>{
     e.preventDefault()
     try{
-      await axios.post('http://localhost:4000/login', data)
+      await axios.post('https://chat-app-8h8v.onrender.com/login', data)
       .then(res=>{
         if(res.data.Status==='Success'){
           setToken(window.localStorage.setItem("token",res.data.token))
