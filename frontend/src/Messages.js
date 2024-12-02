@@ -8,7 +8,7 @@ const Messages = ({receiverId,chats,setChats,title}) => {
   const sendMessage = async (e) =>{
     e.preventDefault()
     try{
-      const response = await axios.post(`https://chat-app-8h8v.onrender.com/${receiverId}`,
+      const response = await axios.post(`https://chat-app-yfd5.onrender.com/${receiverId}`,
         {content : message},{
           headers:{
             "Authorization":`${window.localStorage.getItem('token')}`

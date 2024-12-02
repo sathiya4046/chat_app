@@ -27,7 +27,7 @@ const Register = () => {
     formData.append('images',image)
     if(errors.name ==="" && errors.email==="" && errors.password==="" && errors.cpassword === ""){
       try{
-        await axios.post('https://chat-app-8h8v.onrender.com/register', formData)
+        await axios.post('https://chat-app-yfd5.onrender.com/register', formData)
         .then(res=> {
           if (res.data.Status==="Success"){
             navigate('/login')

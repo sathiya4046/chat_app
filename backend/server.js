@@ -29,7 +29,7 @@ app.use(express.json())
 app.use(cors({
     origin:"*",
     headers: {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'https://chat-hd2ytbouu-sathiya4046s-projects.vercel.app/',
       },
     methods:["GET","POST"],
     credentials:true
