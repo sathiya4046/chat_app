@@ -28,6 +28,9 @@ const onlineUsers = {}
 app.use(express.json())
 app.use(cors({
     origin:"*",
+    headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
     methods:["GET","POST"],
     credentials:true
 }))
