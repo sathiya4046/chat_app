@@ -1,5 +1,5 @@
 body{
-    background-image: url(./bg-chat.png);
+    background-image: url(./images//bg-chat.png);
 }
 .register{
     width: 600px;
@@ -19,7 +19,6 @@ body{
     width: 400px;
     border-right: 1px solid black;
 }
-
 @media screen and (max-width:500px) {
     /* form{
         width: 400px;

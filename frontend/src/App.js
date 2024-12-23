@@ -1,24 +1,20 @@
 import { Route, Routes} from "react-router-dom";
-import Register from "./Register";
-import Login from "./Login";
-import Chatapp from "./Chatapp";
-import { useState } from "react";
+import Register from "./components/Register";
+import Login from "./components/Login";
+import Chatapp from "./components/Chatapp";
 import io from 'socket.io-client'
+import { baseUrl } from "./constant/url";
 
-const socket = io.connect('https://chat-app-yfd5.onrender.com')
+const socket = io.connect(`${baseUrl}`)
 
 function App() {
   
-  const [token, setToken] = useState(null)
-
   return (
     <div className="App text-light">
       <Routes>
         <Route path="/" element={<Register/>}/>
-        <Route path="/login" element={<Login setToken = {setToken}/>}/>
-        <Route path="/chatapp" element={<Chatapp 
-                                        token= {token}
-                                        socket = {socket}/>}/>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/chatapp" element={<Chatapp socket = {socket}/>}/>
       </Routes>
     </div>
   );

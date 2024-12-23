@@ -8,6 +8,9 @@ import express from 'express'
 import multer from 'multer'
 import path from 'path'
 import dotenv from 'dotenv'
+import User from './models/user.js'
+import Message from './models/messages.js'
+import Conversation from './models/conversation.js'
 
 //socket 
 import { Server } from 'socket.io'
@@ -15,28 +18,23 @@ import http from 'http'
 
 const saltRounds= 10
 
-const port = 4000
-
-const app = express()
-
 dotenv.config()
 
+const app = express()
 const server = http.createServer(app)
+const dirname = path.resolve()
+const port = process.env.PORT
 
 const onlineUsers = {}
 
 app.use(express.json())
 app.use(cors({
-    origin:"*",
-    headers: {
-        'Access-Control-Allow-Origin': 'https://chat-hd2ytbouu-sathiya4046s-projects.vercel.app/',
-      },
+    origin:"http://localhost:3000",
     methods:["GET","POST"],
     credentials:true
 }))
 app.use(cookieParser())
 app.use(bodyParser.json())
-app.use(express.static('public'))
 
 //--------db connection -------------
 
@@ -47,7 +45,7 @@ mongoose.connect(process.env.DATABASE)
 
 const storage = multer.diskStorage({
     destination:(req,res,cb)=>{
-        cb(null, 'public/images')
+        cb(null, './backend/public/images')
     },
     filename:(req,file,cb)=>{
         cb(
@@ -59,6 +57,8 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage : storage
 })
+
+app.use('/images',express.static('backend/public/images'))
 
 
 //-------------- socket connection -------
@@ -82,71 +82,14 @@ io.on("connection",(socket) =>{
     })
 })
 
-//----------------
-
-//Register and login schema
-const UserSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    confirmpassword : { type: String, required: true},
-    images : { type: String }
-});
-
-const User = mongoose.model("users",UserSchema)
-
-//---------------------
-
-//-----------------conversation schema
-
-const conversationSchema = new mongoose.Schema(
-    {
-        participants:[
-            {
-                type: mongoose.Schema.Types.ObjectId, 
-                ref:"users"
-            }
-        ]
-    },
-    {
-        timestamps:true,
-    }
-)
-
-const Conversation = mongoose.model('conversations',conversationSchema)
-//-----------------
-
-//-------------message schema
-
-const messageSchema = new mongoose.Schema({
-    conversationId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'conversations',
-        required:true
-    },
-    sender : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'users',
-        required:true
-    },
-    content : {
-        type: String,
-        required:true
-    }
-},{
-    timestamps:true
-})
-
-const Message = mongoose.model("messages",messageSchema)
-
 //----------------- verifyUser-----------------
 
 const verifyUser = (req,res,next)=>{
-    const token = req.headers.authorization
+    const token = req.cookies.token
     if(!token){
         res.json({Status:"Unauthorized"})
     }else{
-        jwt.verify(token,"jwt-private-key",(err,decoded)=>{
+        jwt.verify(token,process.env.SECRET_KEY,(err,decoded)=>{
             if(err){
                 res.json({Status:"Unauthorized"})
             }else{
@@ -175,6 +118,9 @@ app.get('/readMessage/:id', verifyUser, async (req,res)=>{
     const receiverId = req.params.id
     const senderId = req.user.id
 
+    const receiverName = await User.findOne({_id:receiverId})
+    const title = receiverName.name
+
     console.log(receiverId, senderId)
 
 
@@ -183,16 +129,14 @@ app.get('/readMessage/:id', verifyUser, async (req,res)=>{
     })
 
     if(!conversation){
-        return res.json({message:"Not found"})
+        return res.json({message:"Not found",title})
     }
 
     const messages = await Message.find({
         conversationId : conversation._id
     }).sort({createdAt: 1})
 
-    const receiverName = await User.findOne({_id:receiverId})
-
-    return res.json({messages,receiverName})
+    return res.json({messages,title})
 })
 
 
@@ -235,13 +179,19 @@ app.post('/login',async (req,res)=>{
         if(user){
             const comparePassword =await bcrypt.compare(password,user.password)
             if (!comparePassword) return res.json({Status:'Invalid credentials'});
-            const token = jwt.sign({ id: user._id }, "jwt-private-key", { expiresIn: '1h' });
-            res.json({Status:"Success", token, user : {id:user._id, username: user.name} });
+            const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '10d' });
+            res.cookie("token", token, {
+                maxAge:10*24*60*1000,
+                httpOnly: false,
+                secure: true, 
+                sameSite:"strict"
+              })
+            res.json({Status:"Success",user : {id:user._id, username: user.name} });
         }else{
             return res.json({message:"Email already exists"})
         }
     }catch(error){
-        console.log(error)
+        res.json({Error:error})
     }
 })
 
@@ -286,6 +236,12 @@ app.post('/messages/:id', verifyUser, async (req,res)=>{
     }
 })
 
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(dirname,"/frontend/build")))
+    app.use("*",(req,res)=>{
+        res.sendFile(path.resolve(dirname,"frontend","build","index.html"))
+    })
+}
 
 server.listen(port, ()=>{
     console.log(`Running on port ${port}`)
