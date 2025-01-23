@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react'
 import img from '../images/avatar.webp'
 import axios from 'axios'
 import { baseUrl } from '../constant/url'
+import {useMediaQuery} from '@mui/material'
 
 
-const Sidebar = ({handleLogout,setStartchat,setChats,setreceiverId,setTitle}) => {
+const Sidebar = ({handleLogout,startChat,setStartchat,setChats,setreceiverId,setTitle}) => {
     const [user,setUser] = useState([])
+
+    const screen = useMediaQuery('(max-width:572px)')
 
     const username = window.localStorage.getItem('username')
 
@@ -19,7 +22,7 @@ const Sidebar = ({handleLogout,setStartchat,setChats,setreceiverId,setTitle}) =>
         fetchData()   
     },[])
 
-    const startChat = async (id) =>{
+    const startchat = async (id) =>{
 
         try{
             const response = await axios.get(`${baseUrl}/readMessage/${id}`,{withCredentials:true})
@@ -33,14 +36,18 @@ const Sidebar = ({handleLogout,setStartchat,setChats,setreceiverId,setTitle}) =>
     } 
 
   return (
-    <div className='sidebar overflow-scroll text-light'>
+    <>
+    {
+        startChat && screen  ? 
+        null :
+        <div className='sidebar overflow-scroll text-light'>
         <div>
             <nav className='d-flex justify-content-between'>
                 <div>
-                <h2 className='m-2'>Chats</h2>
-                <small className='ms-2'><strong>{username}</strong></small>
+                <h2 className='m-3'>Chats</h2>
+                <small className='ms-3'><strong>{username}</strong></small>
                 </div>
-                <button className='btn btn-danger m-3' onClick={()=>handleLogout()}>Logout</button>
+                <button className='btn btn-danger mt-5 me-5 me-sm-2' onClick={()=>handleLogout()}>Logout</button>
             </nav>
             <hr />
         </div>
@@ -49,10 +56,10 @@ const Sidebar = ({handleLogout,setStartchat,setChats,setreceiverId,setTitle}) =>
                 {user.map((i,index)=>(
                     <div 
                         key={index} 
-                        onClick={()=>startChat(i._id)}>
-                        <div className=' d-flex justify-content-between align-items-center'>
-                          <img className='rounded-pill ms-2' src={i.images ? `http://localhost:4000/images/${i.images}` : img } alt="avatarimg" width={65} height={65} />
-                          <h5 className='me-5'>{i.name}</h5>
+                        onClick={()=>startchat(i._id)}>
+                        <div className=' d-flex justify-content-between  mx-sm-0 align-items-center'>
+                          <img className='rounded-pill ms-3 ms-sm-2' src={i.images ? `http://localhost:4000/images/${i.images}` : img } alt="avatarimg" width={65} height={65} />
+                          <h5 className='pe-5 pe-sm-2'>{i.name}</h5>
                         </div>
                         <div>
                             <hr/>
@@ -63,6 +70,8 @@ const Sidebar = ({handleLogout,setStartchat,setChats,setreceiverId,setTitle}) =>
             </div>
         </div>
     </div>
+    }
+    </>
   )
 }
 

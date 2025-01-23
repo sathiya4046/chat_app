@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { baseUrl } from '../constant/url'
 
-const Messages = ({receiverId,chats,setChats,title}) => {
+const Messages = ({receiverId,chats,setChats,title,setStartchat}) => {
   const [message,setMessage] = useState('')
   const userId = window.localStorage.getItem("userId")
 
@@ -22,7 +22,7 @@ const Messages = ({receiverId,chats,setChats,title}) => {
   return (
     <div className='d-flex h-100 flex-column justify-content-between m-2 py-3'> 
       <div>
-        <h4 className='m-2 text-light'>{title ? title : "New User"}</h4>
+        <h4 className='m-2 text-light'><i onClick={()=>setStartchat(false)} class="bi bi-arrow-left me-3"></i>{title ? title : "New User"}</h4>
         <hr />
                   { chats &&
                   chats.map((chat,index)=>(

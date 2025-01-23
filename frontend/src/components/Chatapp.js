@@ -66,6 +66,7 @@ const Chatapp = ({socket}) => {
               setChats = {setChats}
               setreceiverId = {setreceiverId}
               setTitle = {setTitle}
+              startChat = {startChat}
             />
             {
               startChat ?
@@ -75,10 +76,12 @@ const Chatapp = ({socket}) => {
                 chats = {chats}
                 setChats = {setChats}
                 title = {title}
+                startChat = {startChat}
+                setStartchat = {setStartchat}
                 />
               </div>
               :
-              <div className='w-100 m-5 d-flex flex-column justify-content-center align-items-center'>
+              <div className='w-100 mx-4 d-none d-sm-flex flex-column justify-content-center align-items-center'>
                 <img src={wa} alt="whatsappimage" width={300} height={200} />
                   <h2>Start Chat for Watsapp for PC</h2>
                   <p>Make chats, share your updates and get a faster experience when you using this app</p>

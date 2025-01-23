@@ -19,13 +19,16 @@ body{
     width: 400px;
     border-right: 1px solid black;
 }
-@media screen and (max-width:500px) {
+@media screen and (max-width:572px) {
     /* form{
         width: 400px;
         height: 600px;
     } */
     #login{
         width: 400px;
+    }
+    .sidebar{
+        width: 100%;
     }
 
 }
